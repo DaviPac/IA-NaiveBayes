@@ -2,31 +2,31 @@ import React, { useState } from 'react';
 import { Heart, Building2, TrendingUp, Info } from 'lucide-react';
 
 /**
- * =====================================================
+
  * CLASSIFICADOR NAIVE BAYES
- * =====================================================
+
  * Este componente implementa o algoritmo Naive Bayes para classificação
  * de dados, permitindo que o usuário forneça valores para todos ou apenas
  * um subconjunto de atributos.
- * 
+ 
  * DATASETS SUPORTADOS:
  * 1. Doenças Cardíacas (heart) - Predição de problemas cardíacos
  * 2. Marketing Bancário (bank) - Predição de adesão a produtos
- * =====================================================
+
  */
 const NaiveBayesClassifier = () => {
-  // =====================================================
+ 
   // ESTADOS DO COMPONENTE
-  // =====================================================
+
   const [dataset, setDataset] = useState('heart');
   const [inputValues, setInputValues] = useState({});
   const [prediction, setPrediction] = useState(null);
   const [probabilities, setProbabilities] = useState(null);
   const [showInfo, setShowInfo] = useState(true);
 
-  // =====================================================
+
   // DATASET 1: DOENÇAS CARDÍACAS
-  // =====================================================
+
   const heartData = `63.0,1.0,1.0,145.0,233.0,1.0,2.0,150.0,0.0,2.3,3.0,0.0,6.0,0
 67.0,1.0,4.0,160.0,286.0,0.0,2.0,108.0,1.0,1.5,2.0,3.0,3.0,2
 67.0,1.0,4.0,120.0,229.0,0.0,2.0,129.0,1.0,2.6,2.0,2.0,7.0,1
@@ -40,9 +40,9 @@ const NaiveBayesClassifier = () => {
 57.0,1.0,4.0,140.0,192.0,0.0,0.0,148.0,0.0,0.4,2.0,0.0,6.0,0
 56.0,0.0,2.0,140.0,294.0,0.0,2.0,153.0,0.0,1.3,2.0,0.0,3.0,0`;
 
-  // =====================================================
+
   // DATASET 2: MARKETING BANCÁRIO
-  // =====================================================
+
   const bankData = `30,unemployed,married,primary,no,1787,no,no,cellular,19,oct,79,1,-1,0,unknown,no
 33,services,married,secondary,no,4789,yes,yes,cellular,11,may,220,1,339,4,failure,no
 35,management,single,tertiary,no,1350,yes,no,cellular,16,apr,185,1,330,1,failure,no
@@ -4605,18 +4605,18 @@ const NaiveBayesClassifier = () => {
     poutcome: { name: 'Resultado anterior', type: 'categorical', values: { 'unknown': 'Desconhecido', 'failure': 'Falha', 'success': 'Sucesso' } }
   };
 
-  // =====================================================
+
   // FUNÇÃO: PARSEAMENTO DOS DADOS
-  // =====================================================
+
   const parseData = (dataString) => {
     return dataString.trim().split('\n').map(line => 
       line.split(',').map(val => val.trim())
     );
   };
 
-  // =====================================================
+
   // FUNÇÃO: DISCRETIZAÇÃO DE VALORES NUMÉRICOS
-  // =====================================================
+
   const discretizeNumeric = (value, allValues) => {
     const numValues = allValues.map(Number).filter(v => !isNaN(v));
     const sorted = [...numValues].sort((a, b) => a - b);
@@ -4628,9 +4628,9 @@ const NaiveBayesClassifier = () => {
     return 'alto';
   };
 
-  // =====================================================
+
   // FUNÇÃO PRINCIPAL: ALGORITMO NAIVE BAYES
-  // =====================================================
+
   const calculateNaiveBayes = () => {
     const data = dataset === 'heart' ? parseData(heartData) : parseData(bankData);
     const attrs = dataset === 'heart' ? heartAttributes : bankAttributes;
