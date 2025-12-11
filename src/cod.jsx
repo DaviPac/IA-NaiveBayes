@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import { Heart, Building2, TrendingUp, Info } from 'lucide-react';
 
 /**
+Este projeto implementa o algoritmo Naive Bayes para classificação de dados em duas áreas:
+
+Saúde: Predição de doenças cardíacas
+Marketing: Predição de adesão a produtos bancários
+O diferencial é que o usuário pode fornecer todos ou apenas alguns atributos
+ e o algoritmo ainda consegue fazer predições precisas.
+
+
+
 
  * CLASSIFICADOR NAIVE BAYES
 
@@ -12,6 +21,8 @@ import { Heart, Building2, TrendingUp, Info } from 'lucide-react';
  * DATASETS SUPORTADOS:
  * 1. Doenças Cardíacas (heart) - Predição de problemas cardíacos
  * 2. Marketing Bancário (bank) - Predição de adesão a produtos
+
+Formula: P(Classe|Atributos) = P(Atributos|Classe) × P(Classe) / P(Atributos)
 
  */
 const NaiveBayesClassifier = () => {
@@ -4565,9 +4576,9 @@ const NaiveBayesClassifier = () => {
 28,blue-collar,married,secondary,no,1137,no,no,cellular,6,feb,129,4,211,3,other,no
 44,entrepreneur,single,tertiary,no,1136,yes,yes,cellular,3,apr,345,2,249,7,other,no`;
 
-  // =====================================================
+ 
   // ATRIBUTOS DO DATASET DE DOENÇAS CARDÍACAS
-  // =====================================================
+
   const heartAttributes = {
     age: { name: 'Idade', type: 'numeric', min: 20, max: 80 },
     sex: { name: 'Sexo', type: 'categorical', values: { '0.0': 'Feminino', '1.0': 'Masculino' } },
@@ -4584,9 +4595,8 @@ const NaiveBayesClassifier = () => {
     thal: { name: 'Talassemia', type: 'categorical', values: { '3.0': 'Normal', '6.0': 'Defeito Fixo', '7.0': 'Defeito Reversível' } }
   };
 
-  // =====================================================
   // ATRIBUTOS DO DATASET BANCÁRIO
-  // =====================================================
+
   const bankAttributes = {
     age: { name: 'Idade', type: 'numeric', min: 18, max: 95 },
     job: { name: 'Profissão', type: 'categorical', values: { 'admin.': 'Admin', 'blue-collar': 'Operário', 'management': 'Gestão', 'services': 'Serviços', 'technician': 'Técnico', 'self-employed': 'Autônomo', 'entrepreneur': 'Empreendedor', 'housemaid': 'Empregada doméstica', 'student': 'Estudante', 'retired': 'Aposentado', 'unemployed': 'Desempregado' } },
@@ -4674,6 +4684,9 @@ const NaiveBayesClassifier = () => {
             discretizeNumeric(val, data.map(r => r[attrIndex])) : val;
         });
         
+        // Contagem com suavização de Laplace
+        // ADICIONA +1 NO NUMERADOR (pseudocontagem)
+        // ADICIONA +k NO DENOMINADOR (k = num. valores únicos)
         const count = attrValues.filter(v => v === processedValue).length;
         const uniqueValues = new Set(data.map(row => {
           const val = row[attrIndex];
@@ -4681,9 +4694,15 @@ const NaiveBayesClassifier = () => {
             discretizeNumeric(val, data.map(r => r[attrIndex])) : val;
         })).size;
         
+        // Formula de Laplace: P(A|C) = (count + 1) / (N + k)
         const laplace = (count + 1) / (classData.length + uniqueValues);
         prob += Math.log(laplace);
       });
+
+      //adiciona uma seudocontagem para a probabilidade não ser zero
+      //---------------
+
+      
       
       results[targetClass] = prob;
     });
@@ -4856,8 +4875,8 @@ const NaiveBayesClassifier = () => {
                   <div className="text-sm text-gray-600 mb-2">Classe Predita:</div>
                   <div className="text-3xl font-bold text-green-600">
                     {dataset === 'heart' 
-                      ? (prediction === '0' ? 'Sem Doença ❤️' : `Doença Nível ${prediction} ⚠️`)
-                      : (prediction === 'yes' ? 'Aceita ✓' : 'Recusa ✗')
+                      ? (prediction === '0' ? 'Sem Doença ' : `Doença Nível ${prediction}`)
+                      : (prediction === 'yes' ? 'Aceita ' : 'Recusa ')
                     }
                   </div>
                 </div>
