@@ -4660,6 +4660,10 @@ const NaiveBayesClassifier = () => {
     
     const results = {};
     
+    //  LOG-SPACE: USANDO LOGARITMOS
+// PROPRIEDADE: log(A × B) = log(A) + log(B)
+// Transformamos multiplicação em SOMA
+
     classes.forEach(targetClass => {
       let prob = Math.log(classProbs[targetClass]);
       
@@ -4702,11 +4706,14 @@ const NaiveBayesClassifier = () => {
       //adiciona uma seudocontagem para a probabilidade não ser zero
       //---------------
 
-      
+
       
       results[targetClass] = prob;
     });
     
+    // NORMALIZAÇÃO: Converte log de volta para probabilidades
+    //// 1. Encontra o maior log-prob para estabilidade numérica
+
     const maxProb = Math.max(...Object.values(results));
     const normalizedProbs = {};
     let sum = 0;
